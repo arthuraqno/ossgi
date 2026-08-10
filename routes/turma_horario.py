@@ -1,4 +1,5 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from auth import obter_usuario_atual
 from pydantic import BaseModel
 from services.turna_horario import TurmaHorarioService
 from datetime import time
@@ -17,7 +18,7 @@ def listar_horarios_turma(turma_id: int):
     return turma_horario_service.listar_horarios_turma(turma_id)
 
 @router.post("/turmas/horarios")
-def cadastrar_horarios(dados: TurmaHorarioCreate):
+def cadastrar_horarios(dados: TurmaHorarioCreate, usuario=Depends(obter_usuario_atual)):
     turma_horario_service.cadastrar_horarios(
         turma_id=dados.turma_id,
         dia_semana=dados.dia_semana,

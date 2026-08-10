@@ -1,7 +1,8 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from services.aluno import AlunoService
 from pydantic import BaseModel
 from datetime import date
+from auth import obter_usuario_atual
 
 class AlunoCreate(BaseModel):
     nome: str
@@ -27,7 +28,7 @@ def listar_alunos():
     return aluno_service.listar_alunos()
 
 @router.post("/alunos")
-def cadastrar_alunos(dados: AlunoCreate):
+def cadastrar_alunos(dados: AlunoCreate, usuario=Depends(obter_usuario_atual)):
     aluno_service.cadastrar_alunos(
         nome=dados.nome,
         telefone=dados.telefone,
@@ -39,7 +40,7 @@ def cadastrar_alunos(dados: AlunoCreate):
     return {"mensagem": f"{dados.nome} cadastrado com sucesso!"}
 
 @router.put("/alunos/{id}")
-def atualizar_aluno(id : int, dados: AlunoUpdate):
+def atualizar_aluno(id : int, dados: AlunoUpdate, usuario=Depends(obter_usuario_atual)):
     aluno_service.atualizar_aluno(
         id = id,
         faixa=dados.faixa,

@@ -1,7 +1,8 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from services.professor import ProfessorService
 from datetime import date
 from pydantic import BaseModel
+from auth import obter_usuario_atual
 
 class ProfessorCreate(BaseModel):
     nome : str
@@ -26,7 +27,7 @@ def listar_professores():
     return professor_service.listar_professores()
 
 @router.post("/professores")
-def cadastrar_professores(dados: ProfessorCreate):
+def cadastrar_professores(dados: ProfessorCreate, usuario=Depends(obter_usuario_atual)):
     professor_service.cadastrar_professores(
         nome = dados.nome,
         telefone = dados.telefone,
@@ -37,7 +38,7 @@ def cadastrar_professores(dados: ProfessorCreate):
     return {"mensagem": f"{dados.nome} cadastrado com sucesso!"}
 
 @router.put("/professores/{id}")
-def atualizar_professor(id : int, dados : ProfessorUpdate):
+def atualizar_professor(id : int, dados : ProfessorUpdate, usuario=Depends(obter_usuario_atual)):
     professor_service.atualizar_professor(
         id=id, 
         faixa=dados.faixa,

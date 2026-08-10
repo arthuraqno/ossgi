@@ -1,12 +1,14 @@
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from jose import jwt, JWTError
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 SECRET_KEY = "uma-chave-secreta-bem-dificil-de-advinhar-by-arthuraqno"
 ALGORITHM = "HS256"
 TEMPO_EXPIRACAO_MINUTOS = 60
 
-
+security_scheme = HTTPBearer()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def gerar_hash_senha(senha: str) -> str:
@@ -28,3 +30,13 @@ def validar_token(token: str):
         return payload
     except JWTError:
         return None
+
+def obter_usuario_atual(credentials: HTTPAuthorizationCredentials = Depends(security_scheme)):
+    token = credentials.credentials
+    payload = validar_token(token)
+    if payload is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token inválido ou expirado"
+        )
+    return payload

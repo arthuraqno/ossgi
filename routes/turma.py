@@ -1,6 +1,7 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 from services.turma import TurmaService
+from auth import obter_usuario_atual
 
 class TurmaCreate(BaseModel):
     nome : str
@@ -22,7 +23,7 @@ def listar_turmas():
     return turma_service.listar_turmas()
 
 @router.post("/turmas")
-def cadastrar_turma(dados: TurmaCreate):
+def cadastrar_turma(dados: TurmaCreate, usuario=Depends(obter_usuario_atual)):
     turma_service.cadastrar_turma(
         nome= dados.nome,
         nivel= dados.nivel,
@@ -31,7 +32,7 @@ def cadastrar_turma(dados: TurmaCreate):
     return {"mensagem": f"{dados.nome} cadastrado com sucesso!"}
 
 @router.put("/turmas/{id}")
-def atualizar_turma(id : int, dados: TurmaUpdate):
+def atualizar_turma(id : int, dados: TurmaUpdate, usuario=Depends(obter_usuario_atual)):
     turma_service.atualizar_turma(
         id=id,
         nivel=dados.nivel,
