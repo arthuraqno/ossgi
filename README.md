@@ -75,8 +75,8 @@ uvicorn main:app --reload
 - Autenticação com JWT e hash de senha com bcrypt
 - Variáveis de ambiente para proteger credenciais sensíveis
 - Documentação automática via Swagger
+- Proteção de rotas sensíveis com autenticação JWT
 
 ## 🚧 Em desenvolvimento
 
-- Proteção de rotas sensíveis com autenticação JWT
 - Dockerização e deploy
