@@ -1,10 +1,12 @@
 from passlib.context import CryptContext
+import os
+from dotenv import load_dotenv
 from datetime import datetime, timedelta
 from jose import jwt, JWTError
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-SECRET_KEY = "uma-chave-secreta-bem-dificil-de-advinhar-by-arthuraqno"
+SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 TEMPO_EXPIRACAO_MINUTOS = 60
 
