@@ -9,11 +9,10 @@ from models.turma_horario import TurmaHorario
 from models.usuario import Usuario
 
 load_dotenv()
-senha = os.getenv("DB_PASSWORD")
 
-engine = create_engine(
-    f"postgresql://postgres:{senha}@localhost:5432/ossgi_db"
-)
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+engine = create_engine(DATABASE_URL)
 
 Base.metadata.create_all(engine)
 print("Tabelas criadas com sucesso!")
