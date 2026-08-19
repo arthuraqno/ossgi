@@ -2,6 +2,10 @@
 
 API REST para gestão de academias de jiu-jitsu, desenvolvida em Python com FastAPI, PostgreSQL e autenticação JWT.
 
+🌐 **Deploy:** [ossgi.onrender.com/docs](https://ossgi.onrender.com/docs)
+
+> Hospedado no plano gratuito do Render — se ficar sem acesso por um tempo, a primeira requisição pode levar até ~50s pra "acordar" o serviço.
+
 ## 📋 Funcionalidades
 
 - Cadastro e gestão de alunos, professores e turmas
@@ -17,6 +21,10 @@ ossgi/
 ├── base.py
 ├── database.py
 ├── auth.py
+├── Dockerfile
+├── docker-compose.yml
+├── .dockerignore
+├── requirements.txt
 ├── models/
 │ ├── aluno.py
 │ ├── professor.py
@@ -39,14 +47,32 @@ ossgi/
 
 ## ▶️ Como rodar
 
-1. Crie um banco de dados PostgreSQL chamado `ossgi_db`
-2. Crie um arquivo `.env` na raiz do projeto com sua senha do banco:
+### Opção 1: Docker (recomendado)
+
+1. Crie um arquivo `.env` na raiz do projeto:
 
 DB_PASSWORD=sua_senha_aqui
+DATABASE_URL=postgresql://postgres:sua_senha_aqui@db:5432/ossgi_db
+SECRET_KEY=sua_chave_secreta_aqui
+
+2. Suba os containers (API + PostgreSQL):
+
+docker compose up --build
+
+3. Acesse a documentação interativa em `http://localhost:8000/docs`
+
+### Opção 2: Manual (sem Docker)
+
+1. Crie um banco de dados PostgreSQL local chamado `ossgi_db`
+2. Crie um arquivo `.env` na raiz do projeto:
+
+DB_PASSWORD=sua_senha_aqui
+DATABASE_URL=postgresql://postgres:sua_senha_aqui@localhost:5432/ossgi_db
+SECRET_KEY=sua_chave_secreta_aqui
 
 3. Instale as dependências:
 
-pip install fastapi uvicorn sqlalchemy psycopg2-binary python-dotenv passlib[bcrypt] python-jose[cryptography]
+pip install -r requirements.txt
 
 4. Crie as tabelas:
 
@@ -66,6 +92,8 @@ uvicorn main:app --reload
 - SQLAlchemy (ORM)
 - JWT (autenticação)
 - Passlib/Bcrypt (hash de senha)
+- Docker e Docker Compose
+- Render (deploy)
 
 ## 📚 Conceitos aplicados
 
@@ -76,7 +104,5 @@ uvicorn main:app --reload
 - Variáveis de ambiente para proteger credenciais sensíveis
 - Documentação automática via Swagger
 - Proteção de rotas sensíveis com autenticação JWT
-
-## 🚧 Em desenvolvimento
-
-- Dockerização e deploy
+- Containerização com Docker (multi-container: API + PostgreSQL, healthcheck, volumes persistentes)
+- Deploy em produção com banco de dados gerenciado
